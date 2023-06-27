@@ -35,14 +35,21 @@ def jira2ics(args):
     cookies = utils.parse_chrome_cookie_file(args.chrome_cookies)
     jira = Jira(url=args.url, cookies=cookies)
     cal = make_calendar(jira.jql(args.jql))
-    args.outfile.write(cal.to_ical().decode("utf-8"))
+    try:
+        # line endings are part of the iCal standard, so if we're writing to a file
+        # we need to write the bytes.
+        args.outfile.write(cal.to_ical())
+    except TypeError:
+        # Writing to stdout is a bit different, as it requires an str on Linux. On
+        # Windows stdout accepts a byte.
+        args.outfile.write(cal.to_ical().decode("utf-8"))
 
 
 load_dotenv()
 
 parser = argparse.ArgumentParser(description='Convert Jira issues to iCal format.')
 parser.add_argument('--chrome-cookies', type=argparse.FileType('r'), default="chrome_cookies.txt")
-parser.add_argument('--outfile', nargs='?', type=argparse.FileType('w'), default=os.getenv("outfile"))
+parser.add_argument('--outfile', nargs='?', type=argparse.FileType('wb'), default=os.getenv("outfile"))
 parser.add_argument('--jql', nargs='?', default="resolution = Unresolved AND assignee in (currentUser())")
 parser.add_argument('url', nargs='?', default=os.getenv("url"))
 
