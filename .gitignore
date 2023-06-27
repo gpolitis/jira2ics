@@ -1,3 +1,5 @@
 sample.json
 chrome_cookies.txt
 *.pyc
+
+.env
