@@ -27,17 +27,15 @@ def make_todo(issue):
     return todo
 
 
-def make_calendar(json):
+def make_calendar(args):
     cal = Calendar()
-    for issue in json["issues"]:
-        cal.add_component(make_todo(issue))
-    return cal
 
+    if args.url:
+        cookies = utils.parse_chrome_cookie_file(args.chrome_cookies)
+        jira = Jira(url=args.url, cookies=cookies)
+        for issue in jira.jql(args.jql)["issues"]:
+            cal.add_component(make_todo(issue))
 
-def jira2ics(args):
-    cookies = utils.parse_chrome_cookie_file(args.chrome_cookies)
-    jira = Jira(url=args.url, cookies=cookies)
-    cal = make_calendar(jira.jql(args.jql))
     try:
         # line endings are part of the iCal standard, so if we're writing to a file
         # we need to write the bytes.
@@ -64,4 +62,4 @@ parser.add_argument(
 )
 parser.add_argument("url", nargs="?", default=os.getenv("url"))
 
-jira2ics(parser.parse_args())
+make_calendar(parser.parse_args())
