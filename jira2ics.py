@@ -49,8 +49,8 @@ load_dotenv()
 
 parser = argparse.ArgumentParser(description='Convert Jira issues to iCal format.')
 parser.add_argument('--chrome-cookies', type=argparse.FileType('r'), default="chrome_cookies.txt")
-parser.add_argument('--outfile', nargs='?', type=argparse.FileType('wb'), default=os.getenv("outfile") or "-")
-parser.add_argument('--jql', nargs='?', default=os.getenv("jql") or "resolution = Unresolved AND assignee in (currentUser())")
+parser.add_argument('--outfile', type=argparse.FileType('wb'), default=os.getenv("outfile") or "-")
+parser.add_argument('--jql', default=os.getenv("jql") or "resolution = Unresolved AND assignee in (currentUser())")
 parser.add_argument('url', nargs='?', default=os.getenv("url"))
 
 jira2ics(parser.parse_args())
