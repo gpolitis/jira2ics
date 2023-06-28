@@ -1,5 +1,5 @@
-A super-tiny utility that converts Jira issues into an iCalendar file to make
-it possible to include in Thunderbird. Note that you need to copy/paste the
-cookies from Chrome to make this work. You would run it like this :
+A super-tiny utility that converts your Jira issues into an iCalendar file.
+Note that you need to copy/paste the cookies from Chrome to make this work.
+You would run it like this:
 
     ./jira2ics.py --chrome-cookies chrome_cookies.txt https://jira.example.com
